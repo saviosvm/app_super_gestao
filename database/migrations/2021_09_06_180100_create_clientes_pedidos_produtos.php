@@ -49,6 +49,5 @@ class CreateClientesPedidosProdutos extends Migration
         Schema::dropIfExists('pedidos');
         Schema::dropIfExists('clientes');
         Schema::enableForeignKeyConstraints(); //habilita elas novamente
-
     }
 }

@@ -28,9 +28,11 @@
                         <tr>
                             <!-- linha com o nome de cada coluna -->
                             <th>ID do Pedido</th>
-                            <th>Cliente</th>
+                            <th>ID Cliente</th>
+                            <th>Nome</th>
                             <!--cria a coluna-->
 
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -42,6 +44,18 @@
                             <tr>
                                 <td>{{ $pedido->id }}</td>
                                 <td>{{ $pedido->cliente_id }}</td>
+                                <td>
+                                    @php
+                                    $nome = $nome->find($pedido->cliente_id)
+                                    @endphp
+                                    {{$nome->nome}}
+                                    
+                                </td>
+                                
+                                    
+                            
+                              
+                                <td><a href="{{route('pedido-produto.create', ['pedido' => $pedido->id])}}">Adicionar Produtos</a></td>
 
                                 <td><a href="{{ route('pedido.show', ['pedido' => $pedido->id]) }}">Vizualizar</a></td>
 
@@ -61,10 +75,9 @@
                             </tr>
 
                         @endforeach
-                    </tbody>
+                      
 
                 </table>
-
 
                 <!-- {{ $pedidos->appends($request)->links() }}-->
                 Exibindo {{ $pedidos->count() }} pedidos de {{ $pedidos->total() }} (de

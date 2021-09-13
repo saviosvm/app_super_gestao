@@ -20,9 +20,8 @@ class ProdutoController extends Controller
     {
 
         // $produtos = Produto::paginate(10);
-        $produtos = Item::with(['itemDetalhe', 'fornecedor'])->paginate(10); // item mapeia produtos no model
+        $produtos = Item::with(['itemDetalhe', 'fornecedor', 'pedidos'])->paginate(10); // item mapeia produtos no model
         // with habilita carregamento rapido nos metodos do model Item
-
 
         return view('app.produto.index', ['produtos' => $produtos, 'request' => $request->all()]);
     }

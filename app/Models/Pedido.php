@@ -12,7 +12,7 @@ class Pedido extends Model
     public function produtos()
     {
         //return $this->belongsToMany('App\Models\Produto', 'edidos_produtos'); // faz a mesma coisa que o de baixo, porem por não usar o proprio model Produto não se faz necessário passar as fk, só se passa a tabela auxiliar.
-        return $this->belongsToMany('App\Models\Item', 'pedidos_produtos', 'pedido_id', 'produto_id');
+        return $this->belongsToMany('App\Models\Item', 'pedidos_produtos', 'pedido_id', 'produto_id')->withPivot('created_at', 'quantidade');
         /*
             1 - Modelo(Model) do relacionemto N-N em relação ao modelo que estamos implementando.
             2 -  É a tabela auxiliar(pedidos_produtos) que armazena as FK e garante o relacionamento de NxN.

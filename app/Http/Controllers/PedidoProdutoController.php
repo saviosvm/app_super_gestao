@@ -27,8 +27,7 @@ class PedidoProdutoController extends Controller
     {
         $produtos = Produto::all();
 
-        return view('app.pedido_produto.create',['pedido' => $pedido, 'produtos' => $produtos]);
-        
+        return view('app.pedido_produto.create', ['pedido' => $pedido, 'produtos' => $produtos]);
     }
 
     /**
@@ -42,23 +41,41 @@ class PedidoProdutoController extends Controller
 
         $regras = [
             'produto_id' => 'exists:produtos,id',
+            'quantidade' => 'required'
         ];
 
         $feedback = [
             'produto_id.exists' => 'Registro não encontrado',
+            'quantidade.required' => 'É necessário inserir a :attribute',
         ];
 
         $request->validate($regras, $feedback);
-
+        /*
         $pedidoProduto = new PedidoProduto();
-        $pedidoProduto->pedido_id = $pedido->id;
+        $pedidoProduto->pedido_id = $pe
+        dido->id;
         $pedidoProduto->produto_id = $request->get('produto_id');
+        $pedidoProduto->quantidade = $request->get('quantidade');
         $pedidoProduto->save();
+        */
+
+
+        /* METODO MULTIPLAS INSERÇÕES
+         $pedido->produtos()->attach([
+             $request->get('produto_id') => ['quantidade' => $request->get('quantidae')],
+             //agora era só ir inserinado mais registros, nesse caso iria inserir varios registros de uma vez só
+         ]);
+        */
+
+        //MODO UNITÁRIO, APENAS UM REGISTRO POR VEZ
+        $pedido->produtos()->attach(  //usando o metodo mapeia se o objeto
+            // o atach permite 
+            $request->get('produto_id'), // pega o produto do formulario
+            ['quantidade' => $request->get('quantidade')] // grava a quantidade
+        );
+
 
         return redirect()->route('pedido-produto.create', ['pedido' => $pedido->id]);
-
-
-    
     }
 
     /**
@@ -101,8 +118,19 @@ class PedidoProdutoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Pedido $pedido, Produto $produto)
     {
-        //
+        /*
+        PedidoProduto::where([
+            'pedido_id' => $pedido->id,
+            'produto_id' => $produto->id,
+        ])->delete();*/
+
+        //DETACH(DELETE PELO RELACIONAMENTO
+        //também seria possivel remover o relacionamento através do model Produto
+        $pedido->produtos()->detach($produto->id); // não precisa colocar pedido_id pois na tabela auxiliar ja coloca ele no contexto dentro do metodo produtos
+       // remove todos os registros com o mesmo id em produto_id em pedido_id
+       
+        return redirect()->route('pedido-produto.create', ['pedido' => $pedido]);
     }
 }

@@ -115,10 +115,10 @@ class PedidoProdutoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int PedidoProduto $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pedido $pedido, Produto $produto)
+    public function destroy(PedidoProduto $pedidoProduto, $pedido_id, Produto $produto)
     {
         /*
         PedidoProduto::where([
@@ -128,9 +128,13 @@ class PedidoProdutoController extends Controller
 
         //DETACH(DELETE PELO RELACIONAMENTO
         //também seria possivel remover o relacionamento através do model Produto
-        $pedido->produtos()->detach($produto->id); // não precisa colocar pedido_id pois na tabela auxiliar ja coloca ele no contexto dentro do metodo produtos
+       // $pedido->produtos()->detach($produto->id); // não precisa colocar pedido_id pois na tabela auxiliar ja coloca ele no contexto dentro do metodo produtos
        // remove todos os registros com o mesmo id em produto_id em pedido_id
+
+       $pedidoProduto->delete();
+
+
        
-        return redirect()->route('pedido-produto.create', ['pedido' => $pedido]);
+        return redirect()->route('pedido-produto.create', ['pedido' => $pedido_id]);
     }
 }
